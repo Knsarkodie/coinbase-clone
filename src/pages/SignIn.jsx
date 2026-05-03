@@ -12,7 +12,7 @@ const SignIn = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('https://knsarkodie-coinbase-backend.onrender.com/api/auth/login', { email, password }, {
+      await axios.post('/api/auth/login', { email, password }, {
         withCredentials: true
       });
       // Redirect to profile

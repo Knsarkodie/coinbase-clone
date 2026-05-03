@@ -16,7 +16,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await axios.get('https://knsarkodie-coinbase-backend.onrender.com/api/auth/profile', {
+        const { data } = await axios.get('/api/auth/profile', {
           withCredentials: true
         });
         setUser(data);
@@ -35,7 +35,7 @@ const Profile = () => {
   const handleAddCrypto = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://knsarkodie-coinbase-backend.onrender.com/api/crypto', {
+      await axios.post('/api/crypto', {
         name: formData.name,
         symbol: formData.symbol,
         price: Number(formData.price),
@@ -52,7 +52,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('https://knsarkodie-coinbase-backend.onrender.com/api/auth/logout', {}, {
+      await axios.post('/api/auth/logout', {}, {
         withCredentials: true
       });
       navigate('/signin');

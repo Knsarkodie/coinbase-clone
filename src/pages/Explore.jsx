@@ -9,9 +9,9 @@ const Explore = () => {
   useEffect(() => {
     const fetchCryptos = async () => {
       try {
-        let endpoint = 'https://knsarkodie-coinbase-backend.onrender.com/api/crypto';
-        if (filter === 'gainers') endpoint = 'https://knsarkodie-coinbase-backend.onrender.com/api/crypto/gainers';
-        if (filter === 'new') endpoint = 'https://knsarkodie-coinbase-backend.onrender.com/api/crypto/new';
+        let endpoint = '/api/crypto';
+        if (filter === 'gainers') endpoint = '/api/crypto/gainers';
+        if (filter === 'new') endpoint = '/api/crypto/new';
         
         const { data } = await axios.get(endpoint);
         setCryptocurrencies(data);
