@@ -24,7 +24,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCryptos = async () => {
       try {
-        const { data } = await axios.get('https://knsarkodie-coinbase-backend-api.onrender.com/api/crypto');
+        const { data } = await axios.get('https://knsarkodie-coinbase-backend.onrender.com/api/crypto');
         setCryptocurrencies(data);
       } catch (error) {
         console.error('Error fetching cryptos', error);

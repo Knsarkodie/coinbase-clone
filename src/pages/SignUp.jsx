@@ -20,7 +20,7 @@ const SignUp = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('https://knsarkodie-coinbase-backend-api.onrender.com/api/auth/register', formData, {
+      await axios.post('https://knsarkodie-coinbase-backend.onrender.com/api/auth/register', formData, {
         withCredentials: true
       });
       // Redirect to profile on successful registration and auto-login
