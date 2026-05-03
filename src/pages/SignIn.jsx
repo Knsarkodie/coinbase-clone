@@ -1,13 +1,25 @@
-﻿import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign in:', { email, password });
+    setError('');
+    try {
+      await axios.post('https://knsarkodie-coinbase-backend-api.onrender.com/api/auth/login', { email, password }, {
+        withCredentials: true
+      });
+      // Redirect to profile
+      navigate('/profile');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid email or password');
+    }
   };
 
   return (
@@ -22,6 +34,12 @@ const SignIn = () => {
           </Link>
         </p>
 
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-xl text-sm">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <input
             type="email"
@@ -31,14 +49,17 @@ const SignIn = () => {
             required
             className="w-full rounded-xl border border-[#d1d5db] px-4 py-3 text-sm outline-none transition-colors focus:border-[#0052ff]"
           />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-            className="w-full rounded-xl border border-[#d1d5db] px-4 py-3 text-sm outline-none transition-colors focus:border-[#0052ff]"
-          />
+          <div className="space-y-1">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              className="w-full rounded-xl border border-[#d1d5db] px-4 py-3 text-sm outline-none transition-colors focus:border-[#0052ff]"
+            />
+            <p className="text-xs text-red-600 font-medium">Demo app – do not use your real password</p>
+          </div>
           <button
             type="submit"
             className="w-full rounded-xl bg-[#0052ff] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0044d6]"
@@ -52,4 +73,3 @@ const SignIn = () => {
 };
 
 export default SignIn;
-

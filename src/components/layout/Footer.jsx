@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 const columns = [
   {
@@ -49,6 +49,9 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 border-t border-[#f0f2f5] pt-5">
+          <div className="mb-4 text-xs font-semibold text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
+            DISCLAIMER: This is a student demo project. Do not enter any real personal information, real passwords, or financial data.
+          </div>
           <p className="text-xs text-[#6b7280]">© 2026 Coinbase Clone. All rights reserved.</p>
         </div>
       </div>

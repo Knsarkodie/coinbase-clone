@@ -1,6 +1,6 @@
-﻿import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { cryptocurrencies } from '../data/mockData';
+import axios from 'axios';
 import Sparkline from '../components/crypto/Sparkline';
 
 const features = [
@@ -19,6 +19,20 @@ const features = [
 ];
 
 const Home = () => {
+  const [cryptocurrencies, setCryptocurrencies] = useState([]);
+
+  useEffect(() => {
+    const fetchCryptos = async () => {
+      try {
+        const { data } = await axios.get('https://knsarkodie-coinbase-backend-api.onrender.com/api/crypto');
+        setCryptocurrencies(data);
+      } catch (error) {
+        console.error('Error fetching cryptos', error);
+      }
+    };
+    fetchCryptos();
+  }, []);
+
   return (
     <div className="bg-white">
       <section className="border-b border-[#eef2f7]">
@@ -140,10 +154,10 @@ const Home = () => {
               </thead>
               <tbody>
                 {cryptocurrencies.slice(0, 4).map((asset) => (
-                  <tr key={asset.id} className="border-b border-[#f3f4f6] text-sm transition-colors hover:bg-[#fafcff] last:border-b-0">
+                  <tr key={asset._id} className="border-b border-[#f3f4f6] text-sm transition-colors hover:bg-[#fafcff] last:border-b-0">
                     <td className="px-5 py-4 font-semibold text-[#111827]">
-                      <Link to={`/asset/${asset.id}`} className="inline-flex items-center gap-3 hover:text-[#0052ff]">
-                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eef4ff] text-[10px] font-bold" style={{ color: asset.color }}>
+                      <Link to={`/asset/${asset._id}`} className="inline-flex items-center gap-3 hover:text-[#0052ff]">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eef4ff] text-[10px] font-bold" style={{ color: '#0052ff' }}>
                           {asset.symbol.slice(0, 3)}
                         </span>
                         <span>
@@ -152,20 +166,20 @@ const Home = () => {
                       </Link>
                     </td>
                     <td className="px-5 py-4 font-medium text-[#111827]">${asset.price.toLocaleString()}</td>
-                    <td className={`px-5 py-4 font-semibold ${asset.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {asset.change >= 0 ? '+' : ''}
-                      {asset.change}%
+                    <td className={`px-5 py-4 font-semibold ${asset.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {asset.change24h >= 0 ? '+' : ''}
+                      {asset.change24h}%
                     </td>
                     <td className="px-5 py-4">
                       <Sparkline
-                        data={asset.history}
-                        stroke={asset.change >= 0 ? '#16a34a' : '#dc2626'}
+                        data={[asset.price * 0.9, asset.price * 1.1, asset.price * 0.95, asset.price, asset.price * (1 + (asset.change24h / 100))]}
+                        stroke={asset.change24h >= 0 ? '#16a34a' : '#dc2626'}
                       />
                     </td>
-                    <td className="px-5 py-4 text-[#4b5563]">${asset.marketCap}</td>
+                    <td className="px-5 py-4 text-[#4b5563]">${(asset.price * 1000000).toLocaleString()}</td>
                     <td className="px-5 py-4">
                       <Link
-                        to={`/asset/${asset.id}`}
+                        to={`/asset/${asset._id}`}
                         className="rounded-full border border-[#d1d5db] px-4 py-2 text-xs font-semibold text-[#111827] hover:bg-[#f8fafc]"
                       >
                         Buy

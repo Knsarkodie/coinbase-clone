@@ -1,5 +1,6 @@
-﻿import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -8,14 +9,25 @@ const SignUp = () => {
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign up:', formData);
+    setError('');
+    try {
+      await axios.post('https://knsarkodie-coinbase-backend-api.onrender.com/api/auth/register', formData, {
+        withCredentials: true
+      });
+      // Redirect to profile on successful registration and auto-login
+      navigate('/profile');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error creating account');
+    }
   };
 
   return (
@@ -29,6 +41,12 @@ const SignUp = () => {
             Sign in
           </Link>
         </p>
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-xl text-sm">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -58,15 +76,18 @@ const SignUp = () => {
             required
             className="w-full rounded-xl border border-[#d1d5db] px-4 py-3 text-sm outline-none transition-colors focus:border-[#0052ff]"
           />
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Password"
-            required
-            className="w-full rounded-xl border border-[#d1d5db] px-4 py-3 text-sm outline-none transition-colors focus:border-[#0052ff]"
-          />
+          <div className="space-y-1">
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              required
+              className="w-full rounded-xl border border-[#d1d5db] px-4 py-3 text-sm outline-none transition-colors focus:border-[#0052ff]"
+            />
+            <p className="text-xs text-red-600 font-medium">Demo app – do not use your real password</p>
+          </div>
           <button
             type="submit"
             className="w-full rounded-xl bg-[#0052ff] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0044d6]"
@@ -80,4 +101,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
